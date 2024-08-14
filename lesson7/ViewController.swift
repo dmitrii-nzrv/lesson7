@@ -37,7 +37,7 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: PostCell.id, for: indexPath) as! PostCell
         let item = users[indexPath.row]
         cell.setupView(item: item)
-        
+        cell.selectionStyle = .none
         return cell
     }
     
