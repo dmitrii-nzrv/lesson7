@@ -8,19 +8,21 @@
 import UIKit
 
 class ViewController: UIViewController {
-    let users = UserData.mockData()
+    let users = TableData.mockData()
     
     lazy var tableView: UITableView = {
         $0.dataSource = self
         $0.delegate = self
-        $0.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        $0.separatorStyle = .none
+        $0.register(PostCell.self, forCellReuseIdentifier: PostCell.id)
+        
         return $0
-    }(UITableView(frame: view.frame, style: .insetGrouped))
+    }(UITableView(frame: view.frame, style: .plain))
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
-        title = "Friends"
+        // title = "Friends"
         navigationController?.navigationBar.prefersLargeTitles = true
     }
 }
@@ -32,18 +34,9 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath )
-        let user = users[indexPath.row]
-        
-        var config = cell.defaultContentConfiguration()
-        config.text = user.name
-        config.secondaryText = user.msgs
-        config.image = UIImage(systemName: user.image)
-        
-        cell.accessoryType = .disclosureIndicator
-        
-        cell.contentConfiguration = config
+        let cell = tableView.dequeueReusableCell(withIdentifier: PostCell.id, for: indexPath) as! PostCell
+        let item = users[indexPath.row]
+        cell.setupView(item: item)
         
         return cell
     }
@@ -54,21 +47,22 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         //navigationController?.pushViewController(vc, animated: true)
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-           return "new"
-       }
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//           return "new"
+//       }
 }
 
-struct UserData {
+struct TableData {
     let name: String
-    let msgs: String
+    let profileImage: String
+    let header: String
+    let content: String
     let image: String
     
-    static func mockData() -> [UserData] {
+    static func mockData() -> [TableData] {
         [
-        UserData(name: "Иван Обухов", msgs: "30 сообщений", image: "binoculars.fill"),
-        UserData(name: "Петр Ян", msgs: "20 сообщений", image: "bell.slash.fill"),
-        UserData(name: "Альберт Дьяковский", msgs: "15 сообщений", image: "bolt.slash.circle.fill"),
+        TableData(name: "Petr Yan", profileImage: "circleImg", header: "Заголовок", content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore", image: "img"),
+        TableData(name: "Dmitrii Nazarov", profileImage: "circleImgTwo", header: "Заголовок", content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore", image: "imgTwo")
         ]
     }
 }
